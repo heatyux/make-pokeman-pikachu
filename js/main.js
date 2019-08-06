@@ -1,5 +1,39 @@
 !function() {
-  
+  let duration = 50;
+  $('.actions').on('click', 'button', function(e){
+    let $button = $(e.currentTarget);
+    let speed = $button.attr('data-speed');
+    $button.addClass('active')
+      .siblings('.active').removeClass('active');
+    switch(speed){
+      case 'slow':
+        duration = 100;
+        break;
+      case 'normal':
+        duration = 50;
+        break;
+      case 'fast':
+        duration = 10;
+        break;
+    }
+  })
+
+  function writeCode(prefix, code, fn) {
+    let container = document.querySelector('.code-wrapper>.code');
+    let styleTag = document.querySelector('#styleTag');
+    let n = 0;
+    let timer = setTimeout(function run(){
+      n += 1;
+      container.innerHTML = code.substring(0, n);
+      container.scrollTop = container.scrollHeight;
+      styleTag.innerHTML = code.substring(0, n);
+      if(n < code.length){
+        timer = setTimeout(run, duration);
+      }else {
+        fn && fn.call();
+      }
+    }, duration);
+  }
 
   let code = `
   /*
@@ -157,24 +191,10 @@
 
   /*
    * 完成，我们得到了一只皮卡丘(pikachu)!
+   * 谢谢观看！
   */
   `
 
   writeCode('', code);
-
-  function writeCode(prefix, code, fn) {
-    let container = document.querySelector('.code-wrapper>.code');
-    let styleTag = document.querySelector('#styleTag');
-    let n = 0;
-    let timer = setInterval(()=>{
-      n += 1;
-      container.innerHTML = code.substring(0, n);
-      container.scrollTop = container.scrollHeight;
-      styleTag.innerHTML = code.substring(0, n);
-      if(n >= code.length){
-        window.clearInterval(timer);
-        fn && fn.call();
-      }
-    }, 10);
-  }
+  
 }.call()
